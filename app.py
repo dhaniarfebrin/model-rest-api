@@ -47,12 +47,12 @@ with open('tfidf_vectorizer.pkl', 'rb') as f:
     tfidf = pickle.load(f)
 
 @app.route("/")
-@cross_origin()
+@cross_origin(origin="*",headers=['Content-Type'])
 def hello():
-    return "Hello World!"
+    return "Spam Email Model API!"
 
 @app.route('/predict', methods=['POST'])
-@cross_origin()
+@cross_origin(origin="*",headers=['Content-Type'])
 def predict():
     data = request.json['data']
     process_text = preprocess_text(data)
@@ -67,4 +67,4 @@ def predict():
     return jsonify({'prediction': prediction_str})
 
 if __name__ == "__main__":
-    app.run(debug = True)
+    app.run()
