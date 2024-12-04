@@ -3,44 +3,14 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 import pickle
 import numpy as np
 import string
-import nltk
-from nltk.corpus import stopwords
-from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
-from nltk.stem import PorterStemmer
 from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
-# Membuat stemmer bahasa Indonesia
-factory = StemmerFactory()
-stemmer = factory.create_stemmer()
-
-# Download resources untuk nltk
-nltk.download('stopwords')
-stop_words = set(stopwords.words('indonesian'))
-
-# Fungsi untuk preprocessing teks
-def preprocess_text(text):
-    # Hapus tanda baca dari teks
-    text = text.translate(str.maketrans('', '', string.punctuation))
-
-    # Ubah teks menjadi huruf kecil (lowercase)
-    text = text.lower()
-
-    # Tokenize teks dan hapus stop words
-    # Menggunakan list comprehension untuk mengambil kata yang bukan stop words
-    tokens = [word for word in text.split() if word not in stop_words]
-
-    # Lakukan stemming pada setiap token yang tersisa menggunakan Sastrawi
-    tokens = [stemmer.stem(word) for word in tokens]
-
-    # Gabungkan kembali token yang telah di-stem menjadi satu string
-    return ' '.join(tokens)
-
 # Load the pickled model
-with open('model_svm.pkl', 'rb') as f:
+with open('svm_model_rbf.pkl', 'rb') as f:
     model = pickle.load(f)
 
 with open('tfidf_vectorizer.pkl', 'rb') as f:
@@ -55,10 +25,9 @@ def hello():
 @cross_origin(origin="*",headers=['Content-Type'])
 def predict():
     data = request.json['data']
-    process_text = preprocess_text(data)
 
     # Mengubah teks menjadi representasi TF-IDF
-    text_vector = tfidf.transform([process_text]).toarray()
+    text_vector = tfidf.transform([data]).toarray()
 
     # Make the prediction
     prediction = model.predict(text_vector)
