@@ -1,8 +1,6 @@
 from flask import Flask, request, jsonify
-from sklearn.feature_extraction.text import TfidfVectorizer
 import pickle
 import numpy as np
-import string
 from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
