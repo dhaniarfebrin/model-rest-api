@@ -10,7 +10,7 @@ cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 # Load the pickled model
-with open('svm_model_rbf.pkl', 'rb') as f:
+with open('model_svm.pkl', 'rb') as f:
     model = pickle.load(f)
 
 with open('tf-idf-vectorizer.pkl', 'rb') as f:
