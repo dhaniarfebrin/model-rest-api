@@ -1,6 +1,10 @@
 from flask import Flask, request, jsonify
 import pickle
-import numpy as np
+import os
+
+# Import numpy as needed for your model (if applicable)
+# import numpy as np
+
 from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
@@ -8,10 +12,11 @@ cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 # Load the pickled model
-with open('svm_model_rbf.pkl', 'rb') as f:
+with open(os.path.join(os.path.dirname(__file__), 'svm_model_rbf.pkl'), 'rb') as f:
     model = pickle.load(f)
 
-with open('tf-idf-vectorizer.pkl', 'rb') as f:
+# Load the pre-trained TfidfVectorizer (assuming it's already fitted)
+with open(os.path.join(os.path.dirname(__file__), 'tf-idf-vectorizer.pkl'), 'rb') as f:
     tfidf = pickle.load(f)
 
 @app.route("/")
@@ -58,4 +63,4 @@ def predict():
             }), 500
 
 if __name__ == "__main__":
-    app.run(port=6006)
+    app.run()
