@@ -40,7 +40,11 @@ def predict():
         prediction_str = str(prediction[0])
 
         probability = model.predict_proba(text_vector)
-        probability_str = str(probability[0][0])
+        real_proba = np.max(probability, axis=1)
+        probability_str = str(real_proba[0])
+
+        print(prediction)
+        print(probability_str)
 
         return jsonify({
             "status": "success",
@@ -58,4 +62,4 @@ def predict():
             }), 500
 
 if __name__ == "__main__":
-    app.run(port=6006)
+    app.run(debug=True)
